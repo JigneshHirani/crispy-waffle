@@ -1,8 +1,8 @@
 {
   "public": {
     "default": {
-      "commerce-core-endpoint": "https://www.aemshop.net/graphql",
-      "commerce-endpoint": "https://www.aemshop.net/cs-graphql",
+      "commerce-core-endpoint": "https://mcstaging.healthyplanetcanada.com/graphql",
+      "commerce-endpoint": "https://catalog-service-sandbox.adobe.io/graphql",
       "headers": {
         "all": {
           "Store": "default"
@@ -12,20 +12,20 @@
           "Magento-Store-Code": "main_website_store",
           "Magento-Store-View-Code": "default",
           "Magento-Website-Code": "base",
-          "x-api-key": "4dfa19c9fe6f4cccade55cc5b3da94f7",
-          "Magento-Environment-Id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a"
+          "x-api-key": "20712b942eb44943a97f568a038255b9",
+          "Magento-Environment-Id": "69159dfa-3214-44f5-a014-0239747f7388"
         }
       },
       "analytics": {
-        "base-currency-code": "USD",
-        "environment": "Production",
+        "base-currency-code": "CAD",
+        "environment": "Testing",
         "store-id": 1,
-        "store-name": "Main Website Store",
-        "store-url": "https://www.aemshop.net",
+        "store-name": "Healthy Planet",
+        "store-url": "https://mcstaging.healthyplanetcanada.com/",
         "store-view-id": 1,
-        "store-view-name": "Default Store View",
+        "store-view-name": "EN",
         "website-id": 1,
-        "website-name": "Main Website"
+        "website-name": "Healthy Planet"
       },
       "plugins": {
         "picker": {
