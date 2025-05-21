@@ -1,10 +1,38 @@
 import { getConfigValue } from '../../scripts/configs.js';
 import { rootLink } from '../../scripts/scripts.js';
+import { performMonolithGraphQLQuery } from '../../scripts/commerce.js';
+
+async function loadCategory(urlPath) {
+  const query = `{
+    categories(filters: {url_key: {eq: "${urlPath}"}}) {
+      items {
+        name
+        id
+      }
+    }
+  }`;
+
+  try {
+    const response = await performMonolithGraphQLQuery(query, {}, true, false);
+    return response?.data?.categories?.items?.[0] || null;
+  } catch (error) {
+    console.error('Failed to load category:', error);
+    return null;
+  }
+}
+
+function readUrlPath() {
+  const path = window.location.pathname;
+  const match = path.match(/\/categories\/([^/]+)/);
+  return match?.[1] || '';
+}
 
 export default async function decorate(block) {
   const type = '';
-  const category = '';
-  const urlpath = readUrlPath();
+  const urlPath = readUrlPath();
+  const categoryData = await loadCategory(urlPath);
+  const categoryName = categoryData?.name || '';
+  const category = categoryData?.id;
 
   // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
   await import('/scripts/widgets/search.js');
@@ -54,9 +82,9 @@ export default async function decorate(block) {
   };
 
   if (type !== 'search') {
-    storeDetails.config.categoryName = document.querySelector('.default-content-wrapper > h1')?.innerText;
-    storeDetails.config.currentCategoryId = category;
-    storeDetails.config.currentCategoryUrlPath = urlpath;
+    storeDetails.config.categoryName = categoryName;
+    storeDetails.config.currentCategoryId = `${category}`;
+    storeDetails.config.currentCategoryUrlPath = urlPath;
 
     // Enable enrichment
     block.dataset.category = category;
@@ -72,10 +100,4 @@ export default async function decorate(block) {
   });
 
   return window.LiveSearchPLP({ storeDetails, root: block });
-}
-
-function readUrlPath() {
-  const path = window.location.pathname;
-  const result = path.match(/\/categories\/([^/]+)/);
-  return result?.[1];
 }
