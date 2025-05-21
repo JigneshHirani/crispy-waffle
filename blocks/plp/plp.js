@@ -9,7 +9,7 @@ export default async function decorate(block) {
 
     // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
     await import('/scripts/widgets/search.js');
-    block.textContent = 'Hello';
+    block.textContent = '';
 
     const storeDetails = {
         environmentId: getConfigValue('headers.cs.Magento-Environment-Id'),
