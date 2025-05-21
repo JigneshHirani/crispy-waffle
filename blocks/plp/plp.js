@@ -2,7 +2,6 @@ import { getConfigValue } from '../../scripts/configs.js';
 import { rootLink } from '../../scripts/scripts.js';
 
 export default async function decorate(block) {
-
   const type = '';
   const category = '';
   const urlpath = readUrlPath();
