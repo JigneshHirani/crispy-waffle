@@ -1,7 +1,8 @@
 mountpoints:
   /:
-    url: https://content.da.live/{org}/{site}/
+    url: https://content.da.live/JigneshHirani/crispy-waffle/
     type: markup
 
 folders:
   /products/: /products/default
+  /categories/: /categories/default
