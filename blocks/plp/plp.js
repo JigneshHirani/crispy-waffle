@@ -3,80 +3,80 @@ import { rootLink } from '../../scripts/scripts.js';
 
 export default async function decorate(block) {
 
-    const type = '';
-    const category = '';
-    const urlpath = readUrlPath();
+  const type = '';
+  const category = '';
+  const urlpath = readUrlPath();
 
-    // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
-    await import('/scripts/widgets/search.js');
-    block.textContent = '';
+  // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
+  await import('/scripts/widgets/search.js');
+  block.textContent = '';
 
-    const storeDetails = {
-        environmentId: getConfigValue('headers.cs.Magento-Environment-Id'),
-        environmentType: (getConfigValue('commerce-endpoint')).includes('sandbox') ? 'testing' : '',
-        apiKey: getConfigValue('headers.cs.x-api-key'),
-        apiUrl: getConfigValue('commerce-endpoint'),
-        websiteCode: getConfigValue('headers.cs.Magento-Website-Code'),
-        storeCode: getConfigValue('headers.cs.Magento-Store-Code'),
-        storeViewCode: getConfigValue('headers.cs.Magento-Store-View-Code'),
-        config: {
-            pageSize: 8,
-            perPageConfig: {
-                pageSizeOptions: '12,24,36',
-                defaultPageSizeOption: '12',
-            },
-            minQueryLength: '2',
-            currencySymbol: '$',
-            currencyRate: '1',
-            displayOutOfStock: true,
-            allowAllProducts: false,
-            imageCarousel: false,
-            optimizeImages: true,
-            imageBaseWidth: 200,
-            listview: true,
-            displayMode: '', // "" for plp || "PAGE" for category/catalog
-            addToCart: async (...args) => {
-                const { addProductsToCart } = await import('../../scripts/__dropins__/storefront-cart/api.js');
-                await addProductsToCart([{
-                    sku: args[0],
-                    options: args[1],
-                    quantity: args[2],
-                }]);
-            },
-        },
-        context: {
-            customerGroup: getConfigValue('headers.cs.Magento-Customer-Group'),
-        },
-        route: ({ sku, urlKey }) => {
-            const a = new URL(window.location.origin);
-            a.pathname = rootLink(`/products/${urlKey}/${sku}`);
-            return a.toString();
-        },
-    };
+  const storeDetails = {
+    environmentId: getConfigValue('headers.cs.Magento-Environment-Id'),
+    environmentType: (getConfigValue('commerce-endpoint')).includes('sandbox') ? 'testing' : '',
+    apiKey: getConfigValue('headers.cs.x-api-key'),
+    apiUrl: getConfigValue('commerce-endpoint'),
+    websiteCode: getConfigValue('headers.cs.Magento-Website-Code'),
+    storeCode: getConfigValue('headers.cs.Magento-Store-Code'),
+    storeViewCode: getConfigValue('headers.cs.Magento-Store-View-Code'),
+    config: {
+      pageSize: 8,
+      perPageConfig: {
+        pageSizeOptions: '12,24,36',
+        defaultPageSizeOption: '12',
+      },
+      minQueryLength: '2',
+      currencySymbol: '$',
+      currencyRate: '1',
+      displayOutOfStock: true,
+      allowAllProducts: false,
+      imageCarousel: false,
+      optimizeImages: true,
+      imageBaseWidth: 200,
+      listview: true,
+      displayMode: '', // "" for plp || "PAGE" for category/catalog
+      addToCart: async (...args) => {
+        const { addProductsToCart } = await import('../../scripts/__dropins__/storefront-cart/api.js');
+        await addProductsToCart([{
+          sku: args[0],
+          options: args[1],
+          quantity: args[2],
+        }]);
+      },
+    },
+    context: {
+      customerGroup: getConfigValue('headers.cs.Magento-Customer-Group'),
+    },
+    route: ({ sku, urlKey }) => {
+      const a = new URL(window.location.origin);
+      a.pathname = rootLink(`/products/${urlKey}/${sku}`);
+      return a.toString();
+    },
+  };
 
-    if (type !== 'search') {
-        storeDetails.config.categoryName = document.querySelector('.default-content-wrapper > h1')?.innerText;
-        storeDetails.config.currentCategoryId = category;
-        storeDetails.config.currentCategoryUrlPath = urlpath;
+  if (type !== 'search') {
+    storeDetails.config.categoryName = document.querySelector('.default-content-wrapper > h1')?.innerText;
+    storeDetails.config.currentCategoryId = category;
+    storeDetails.config.currentCategoryUrlPath = urlpath;
 
-        // Enable enrichment
-        block.dataset.category = category;
-    }
+    // Enable enrichment
+    block.dataset.category = category;
+  }
 
-    await new Promise((resolve) => {
-        const interval = setInterval(() => {
-            if (window.LiveSearchPLP) {
-                clearInterval(interval);
-                resolve();
-            }
-        }, 200);
-    });
+  await new Promise((resolve) => {
+    const interval = setInterval(() => {
+      if (window.LiveSearchPLP) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 200);
+  });
 
-    return window.LiveSearchPLP({ storeDetails, root: block });
+  return window.LiveSearchPLP({ storeDetails, root: block });
 }
 
 function readUrlPath() {
-    const path = window.location.pathname;
-    const result = path.match(/\/categories\/([^/]+)/);
-    return result?.[1];
+  const path = window.location.pathname;
+  const result = path.match(/\/categories\/([^/]+)/);
+  return result?.[1];
 }
