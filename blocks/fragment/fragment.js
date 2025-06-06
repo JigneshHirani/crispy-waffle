@@ -25,6 +25,14 @@ export async function loadFragment(path) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
 
+      if (path === '/nav') {
+        const divs = main.querySelectorAll('div');
+
+        if (divs.length >= 3) {
+          const secondDiv = divs[1];
+          secondDiv.innerHTML = '<ul><li><p><a href="https://healthyplanetcanada.local/vitamins-supplements.html" title="Vitamins &amp; Supplements">Vitamins &amp; Supplements</a></p><ul><li><p><a href="https://healthyplanetcanada.local/vitamins-supplements/supplements.html" title="Supplements">Supplements</a></p><ul><li><p><a href="https://healthyplanetcanada.local/vitamins-supplements/supplements/antioxidant.html" title="Antioxidants">Antioxidants</a></p></li></ul></li><li><p><a href="https://healthyplanetcanada.local/vitamins-supplements/vitamins.html" title="Vitamins (A-K)">Vitamins (A-K)</a></p><ul><li><p><a href="https://healthyplanetcanada.local/vitamins-supplements/vitamins/vitamin-a.html" title="Vitamin A">Vitamin A</a></p></li></ul></li></ul></li></ul>';
+        }
+      }
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {

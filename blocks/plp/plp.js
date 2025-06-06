@@ -4,7 +4,7 @@ import { performMonolithGraphQLQuery } from '../../scripts/commerce.js';
 
 async function loadCategory(urlPath) {
   const query = `{
-    categories(filters: {url_key: {eq: "${urlPath}"}}) {
+    categories(filters: {url_path: {eq: "${urlPath}"}}) {
       items {
         name
         id
@@ -23,8 +23,29 @@ async function loadCategory(urlPath) {
 
 function readUrlPath() {
   const path = window.location.pathname;
-  const match = path.match(/\/categories\/([^/]+)/);
-  return match?.[1] || '';
+
+  // Match everything after "/categories/"
+  const match = path.match(/\/categories\/(.+)/);
+  if (!match) return '';
+
+  // Extract the path part after /categories/
+  let categoryPath = match[1];
+
+  // Remove trailing slash (if any)
+  categoryPath = categoryPath.replace(/\/$/, '');
+
+  // Remove query string (just in case pathname contains it)
+  [categoryPath] = categoryPath.split('?');
+
+  // Split into segments
+  const segments = categoryPath.split('/');
+
+  // If last segment contains '=', remove it
+  if (segments[segments.length - 1].includes('=')) {
+    segments.pop();
+  }
+
+  return segments.join('/');
 }
 
 export default async function decorate(block) {
